@@ -122,4 +122,18 @@ skip themselves and the engine tests still run.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
+
+### Third-party components
+
+The published builds bundle:
+
+| Component | License |
+|---|---|
+| [Qt](https://www.qt.io/) via [PySide6](https://doc.qt.io/qtforpython/) | LGPL-3.0 |
+| [watchdog](https://github.com/gorakhargosh/watchdog) | Apache-2.0 |
+| [pathspec](https://github.com/cpburnz/python-pathspec) | MPL-2.0 |
+
+Qt is used under the LGPL, which is why it is bundled as shared libraries
+rather than linked statically: you are free to replace them with your own build
+of Qt. Qt's source is available from [qt.io](https://www.qt.io/download-open-source).

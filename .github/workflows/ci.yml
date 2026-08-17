@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Nothing here writes to the repository. Stated explicitly so a pull request
+# from a fork cannot inherit a wider default if the repository setting changes.
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint

@@ -103,7 +103,9 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          draft: true
+          # Tagging is the deliberate act here, so the release goes live with
+          # it rather than waiting in drafts.
+          draft: false
           generate_release_notes: true
           files: artifacts/**/*
           body: |
