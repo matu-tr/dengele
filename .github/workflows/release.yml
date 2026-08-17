@@ -1,0 +1,122 @@
+name: Build and release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag or branch to build (e.g. v0.1.0)"
+        required: true
+
+# Only the publish job writes anything; the build jobs stay read-only.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: macOS (Apple Silicon)
+            os: macos-14
+            artifact: macos-apple-silicon
+          - label: macOS (Intel)
+            os: macos-13
+            artifact: macos-intel
+          - label: Windows (x64)
+            os: windows-latest
+            artifact: windows-x64
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -e ".[dev]"
+
+      - name: Generate icons
+        run: python packaging/make_icons.py
+
+      - name: Build with PyInstaller
+        run: pyinstaller --noconfirm packaging/mtsync.spec
+
+      - name: Package for macOS
+        if: runner.os == 'macOS'
+        run: |
+          # A plain zip of the .app would lose nothing, but a .dmg is what
+          # people expect to double-click.
+          hdiutil create -volname "MT Sync" \
+            -srcfolder "dist/MT Sync.app" \
+            -ov -format UDZO \
+            "dist/MT-Sync-${{ matrix.artifact }}.dmg"
+
+      - name: Package for Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Inno Setup ships on the Windows runners; it produces a normal
+          # installer rather than a folder people have to place themselves.
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" packaging\installer.iss
+          Compress-Archive -Path "dist\MT Sync\*" -DestinationPath "dist\MT-Sync-windows-x64-portable.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mt-sync-${{ matrix.artifact }}
+          path: |
+            dist/*.dmg
+            dist/*.exe
+            dist/*.zip
+          if-no-files-found: error
+          retention-days: 90
+
+  publish:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    # Only tags become releases; a manual run just leaves the artifacts behind.
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      # Collecting into one job means the release is created once, rather than
+      # three parallel jobs racing to create and then update it.
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List what will be published
+        run: find artifacts -type f -print
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: artifacts/**/*
+          body: |
+            Unsigned builds.
+
+            **macOS** — Gatekeeper refuses these on first launch. After moving
+            the app to Applications, run:
+
+            ```
+            xattr -dr com.apple.quarantine "/Applications/MT Sync.app"
+            ```
+
+            The first sync of a folder inside Desktop, Documents, Downloads or
+            an external drive will ask for permission. If no prompt appears,
+            allow MT Sync under System Settings › Privacy & Security › Files
+            and Folders.
+
+            **Windows** — SmartScreen warns about an unknown publisher; choose
+            *More info* → *Run anyway*.
