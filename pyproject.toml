@@ -1,0 +1,49 @@
+[project]
+name = "mt-sync"
+version = "0.1.0"
+description = "Keep two folders in sync, in both directions, on macOS and Windows"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "PySide6>=6.7",
+    "watchdog>=4.0",
+    "pathspec>=0.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "pyinstaller>=6.10",
+]
+# Deliberately no pytest-qt: its plugin imports QtGui at collection time, which
+# fails outright on machines without OpenGL libraries and takes the engine
+# tests down with it. UI tests bring up a QApplication themselves and skip
+# cleanly when Qt cannot load.
+
+[project.gui-scripts]
+mt-sync = "mtsync.__main__:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mtsync*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    # Qt's API is camelCase and overriding its methods is the whole point.
+    "N802",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The engine is pure Python; UI tests opt into Qt explicitly.
+addopts = "-q"
