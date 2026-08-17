@@ -41,6 +41,11 @@ select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 ignore = [
     # Qt's API is camelCase and overriding its methods is the whole point.
     "N802",
+    # User-facing strings use real typography — en dashes, curly quotes, the
+    # › separator macOS uses for menu paths. These are intentional, not typos.
+    "RUF001",
+    "RUF002",
+    "RUF003",
 ]
 
 [tool.pytest.ini_options]
