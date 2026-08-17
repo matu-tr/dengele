@@ -71,3 +71,23 @@ def make_pair(tmp_path: Path):
         return Pair(directory, policy)
 
     return factory
+
+
+@pytest.fixture
+def pair_in():
+    """Build a pair rooted anywhere, optionally sharing a snapshot database.
+
+    Exposed as a fixture rather than by importing `Pair` from this module:
+    `tests` is not an installed package, so `from tests.conftest import ...`
+    only resolves when pytest happens to have put the repository root on
+    sys.path — which it does not do the same way on every platform.
+    """
+
+    def factory(directory: Path, snapshot: Snapshot | None = None) -> Pair:
+        directory.mkdir(parents=True, exist_ok=True)
+        built = Pair(directory)
+        if snapshot is not None:
+            built.snapshot = snapshot
+        return built
+
+    return factory

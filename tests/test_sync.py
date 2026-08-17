@@ -327,28 +327,20 @@ def test_an_unreadable_root_reports_access_rather_than_hanging(pair):
         pair.root_a.chmod(0o755)
 
 
-def test_preview_works_while_another_pair_is_mid_sync(tmp_path: Path):
+def test_preview_works_while_another_pair_is_mid_sync(tmp_path: Path, pair_in):
     """Regression for the deadlock that made the Rust version look frozen.
 
     There a single mutex guarded the snapshot database for a whole sync, so
     computing a preview blocked until that sync finished — which, when the sync
     itself was stuck, meant forever.
     """
-    from tests.conftest import Pair
-
     shared_db = tmp_path / "state.db"
 
-    first_dir = tmp_path / "first"
-    first_dir.mkdir()
-    first = Pair(first_dir)
-    first.snapshot = Snapshot(shared_db)
+    first = pair_in(tmp_path / "first", Snapshot(shared_db))
     first.write(Side.A, "doc.txt", "content")
 
-    second_dir = tmp_path / "second"
-    second_dir.mkdir()
-    second = Pair(second_dir)
+    second = pair_in(tmp_path / "second", Snapshot(shared_db))
     second.cfg.id = "second-pair"
-    second.snapshot = Snapshot(shared_db)
     second.write(Side.A, "other.txt", "other")
 
     # Both pairs share one database file; planning one must not be blocked by
