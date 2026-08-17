@@ -21,12 +21,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # `macos-latest` rather than a pinned image: the pinned Intel runner
+          # (macos-13) left the whole run queued indefinitely, which is how a
+          # retired or unavailable label behaves — it never fails, it just
+          # never starts. Intel Macs would need a separate x86_64 job; add one
+          # back only if someone actually needs it, since macOS runners bill at
+          # ten times the rate of Linux ones.
           - label: macOS (Apple Silicon)
-            os: macos-14
+            os: macos-latest
             artifact: macos-apple-silicon
-          - label: macOS (Intel)
-            os: macos-13
-            artifact: macos-intel
           - label: Windows (x64)
             os: windows-latest
             artifact: windows-x64
