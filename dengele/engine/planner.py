@@ -24,6 +24,7 @@ from .models import (
     PairConfig,
     Plan,
     PlanStats,
+    ROOT_MARKER,
     Side,
     SnapRecord,
 )
@@ -363,9 +364,9 @@ def validate_roots(cfg: PairConfig) -> None:
             raise RootError(f"folder {side.label} does not exist: {root}", root)
         if not root.is_dir():
             raise RootError(f"folder {side.label} is not a directory: {root}", root)
-        if cfg.require_marker and not (root / ".mt-sync-root").exists():
+        if cfg.require_marker and not (root / ROOT_MARKER).exists():
             raise RootError(
-                f"folder {side.label} is missing its .mt-sync-root marker: {root}", root
+                f"folder {side.label} is missing its {ROOT_MARKER} marker: {root}", root
             )
 
     # Resolve so symlinked or differently-spelled paths to the same place are

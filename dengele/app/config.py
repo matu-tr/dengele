@@ -11,7 +11,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
-from mtsync.engine import ConflictPolicy, PairConfig, default_excludes
+from dengele.engine import ConflictPolicy, PairConfig, default_excludes
 
 from . import paths
 

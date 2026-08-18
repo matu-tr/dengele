@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QGuiApplication
 
-from mtsync.app.config import Theme
+from dengele.app.config import Theme
 
 
 @dataclass(frozen=True, slots=True)

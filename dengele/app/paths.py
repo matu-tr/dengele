@@ -2,12 +2,41 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import sys
 from pathlib import Path
 
-APP_NAME = "MT Sync"
-APP_DIR_NAME = "mt-sync"
+APP_NAME = "Dengele"
+APP_DIR_NAME = "dengele"
+
+#: What the directories were called before the app was renamed. An install
+#: that predates the rename keeps its config and — more importantly — the
+#: snapshot of what both sides last agreed on. Losing that snapshot would not
+#: lose files, but it would leave the engine unable to tell a deletion from a
+#: creation, so the directory is moved across rather than started fresh.
+_LEGACY_APP_DIR_NAME = "mt-sync"
+
+
+def _base_dir() -> Path:
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support"
+    if sys.platform == "win32":
+        return Path(os.environ.get("APPDATA") or Path.home() / "AppData" / "Roaming")
+    return Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
+
+
+def _adopt_legacy(path: Path, legacy: Path) -> None:
+    """Move a pre-rename directory into place, if one is there and ours is not.
+
+    Failure is deliberately silent: a missing or unreadable legacy directory
+    just means there is nothing to carry over, and the caller creates a fresh
+    one immediately afterwards.
+    """
+    if path.exists() or not legacy.is_dir():
+        return
+    with contextlib.suppress(OSError):
+        legacy.rename(path)
 
 
 def data_dir() -> Path:
@@ -18,14 +47,9 @@ def data_dir() -> Path:
     These locations are the platform conventions and are never inside a
     user's document folders.
     """
-    if sys.platform == "darwin":
-        base = Path.home() / "Library" / "Application Support"
-    elif sys.platform == "win32":
-        base = Path(os.environ.get("APPDATA") or Path.home() / "AppData" / "Roaming")
-    else:
-        base = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
-
+    base = _base_dir()
     path = base / APP_DIR_NAME
+    _adopt_legacy(path, base / _LEGACY_APP_DIR_NAME)
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -40,7 +64,9 @@ def database_file() -> Path:
 
 def log_dir() -> Path:
     if sys.platform == "darwin":
-        path = Path.home() / "Library" / "Logs" / APP_DIR_NAME
+        logs = Path.home() / "Library" / "Logs"
+        path = logs / APP_DIR_NAME
+        _adopt_legacy(path, logs / _LEGACY_APP_DIR_NAME)
     else:
         path = data_dir() / "logs"
     path.mkdir(parents=True, exist_ok=True)
@@ -48,7 +74,7 @@ def log_dir() -> Path:
 
 
 def log_file() -> Path:
-    return log_dir() / "mt-sync.log"
+    return log_dir() / "dengele.log"
 
 
 def home() -> Path:

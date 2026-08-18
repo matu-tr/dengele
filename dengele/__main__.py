@@ -11,15 +11,16 @@ from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QLocalServer, QLocalSocket
 from PySide6.QtWidgets import QApplication
 
-from mtsync.app import config as config_module
-from mtsync.app import paths
-from mtsync.app.controller import Controller
-from mtsync.app.watcher import Scheduler, Watchers
+from dengele.app import autostart
+from dengele.app import config as config_module
+from dengele.app import paths
+from dengele.app.controller import Controller
+from dengele.app.watcher import Scheduler, Watchers
 
 log = logging.getLogger(__name__)
 
 #: Name of the socket used to detect a second launch.
-_INSTANCE_KEY = "tr.matu.mtsync.instance"
+_INSTANCE_KEY = "tr.matu.dengele.instance"
 
 #: How often the window re-reads controller state. Signals already push most
 #: updates; this catches anything that happened while the window was hidden.
@@ -72,6 +73,9 @@ def _claim_single_instance() -> QLocalServer | None:
 
 
 def main() -> int:
+    # Before anything reads it: setup_logging() calls paths.log_file(), which
+    # is what carries a pre-rename data directory across.
+    autostart.migrate_legacy()
     setup_logging(verbose="--verbose" in sys.argv)
 
     app = QApplication(sys.argv)
@@ -86,9 +90,9 @@ def main() -> int:
         log.info("another instance is already running; asking it to show itself")
         return 0
 
-    from mtsync.ui.icon import app_icon
-    from mtsync.ui.main_window import MainWindow
-    from mtsync.ui.tray import Tray
+    from dengele.ui.icon import app_icon
+    from dengele.ui.main_window import MainWindow
+    from dengele.ui.tray import Tray
 
     app.setWindowIcon(app_icon())
 
@@ -126,7 +130,7 @@ def main() -> int:
     app.aboutToQuit.connect(scheduler.stop)
     app.aboutToQuit.connect(watchers.stop)
 
-    log.info("MT Sync started (data in %s)", paths.data_dir())
+    log.info("Dengele started (data in %s)", paths.data_dir())
     return app.exec()
 
 

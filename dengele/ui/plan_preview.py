@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from mtsync.engine import ConflictKind, Op, OpKind, Plan, Side
+from dengele.engine import ConflictKind, Op, OpKind, Plan, Side
 
 from .widgets import Dialog, banner, button, card, format_bytes, label
 

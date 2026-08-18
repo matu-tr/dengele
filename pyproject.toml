@@ -1,5 +1,5 @@
 [project]
-name = "mt-sync"
+name = "dengele"
 version = "0.1.0"
 description = "Keep two folders in sync, in both directions, on macOS and Windows"
 readme = "README.md"
@@ -23,14 +23,14 @@ dev = [
 # cleanly when Qt cannot load.
 
 [project.gui-scripts]
-mt-sync = "mtsync.__main__:main"
+dengele = "dengele.__main__:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["mtsync*"]
+include = ["dengele*"]
 
 [tool.ruff]
 line-length = 100

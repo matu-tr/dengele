@@ -27,10 +27,10 @@ except ImportError as err:  # pragma: no cover - depends on the host
     # (libGL and friends) on a machine with no graphics stack.
     pytest.skip(f"Qt GUI libraries unavailable: {err}", allow_module_level=True)
 
-from mtsync.app.config import Config, Pair, Theme
-from mtsync.app.controller import Controller
-from mtsync.app.watcher import Watchers
-from mtsync.engine import ConflictPolicy, Side
+from dengele.app.config import Config, Pair, Theme
+from dengele.app.controller import Controller
+from dengele.app.watcher import Watchers
+from dengele.engine import ConflictPolicy, Side
 
 
 @pytest.fixture(scope="session")
@@ -53,13 +53,13 @@ def wired(qt_app, tmp_path: Path, monkeypatch):
     config = Config(pairs=[pair])
 
     # Never write to the real config file from a test.
-    monkeypatch.setattr("mtsync.app.config.save", lambda *a, **k: None)
-    monkeypatch.setattr("mtsync.app.autostart.set_enabled", lambda *a, **k: None)
+    monkeypatch.setattr("dengele.app.config.save", lambda *a, **k: None)
+    monkeypatch.setattr("dengele.app.autostart.set_enabled", lambda *a, **k: None)
 
     controller = Controller(config, database=tmp_path / "state.db")
     watchers = Watchers(controller)
 
-    from mtsync.ui.main_window import MainWindow
+    from dengele.ui.main_window import MainWindow
 
     window = MainWindow(controller, watchers)
     try:
@@ -128,7 +128,7 @@ def test_a_card_reflects_a_finished_sync(wired, qt_app):
 
 
 def test_the_preview_dialog_opens_and_lists_work(wired):
-    from mtsync.ui.plan_preview import PlanPreview
+    from dengele.ui.plan_preview import PlanPreview
 
     window, controller, pair = wired
     plan = controller.preview(pair.id)
@@ -143,7 +143,7 @@ def test_the_preview_dialog_opens_and_lists_work(wired):
 
 
 def test_the_preview_dialog_handles_an_empty_plan(wired):
-    from mtsync.ui.plan_preview import PlanPreview
+    from dengele.ui.plan_preview import PlanPreview
 
     window, controller, pair = wired
     controller.start(pair.id)
@@ -161,7 +161,7 @@ def test_the_preview_dialog_handles_an_empty_plan(wired):
 
 
 def test_the_editor_round_trips_a_pair(wired):
-    from mtsync.ui.pair_editor import PairEditor
+    from dengele.ui.pair_editor import PairEditor
 
     window, _, pair = wired
     editor = PairEditor(pair, is_new=False, parent=window)
@@ -190,7 +190,7 @@ def test_the_editor_round_trips_a_pair(wired):
 
 
 def test_the_editor_refuses_an_unusable_exclude_pattern(wired):
-    from mtsync.ui.pair_editor import PairEditor
+    from dengele.ui.pair_editor import PairEditor
 
     window, _, pair = wired
     editor = PairEditor(pair, is_new=False, parent=window)
@@ -208,7 +208,7 @@ def test_the_editor_refuses_an_unusable_exclude_pattern(wired):
 
 
 def test_the_editor_refuses_two_identical_folders(wired, tmp_path: Path):
-    from mtsync.ui.pair_editor import PairEditor
+    from dengele.ui.pair_editor import PairEditor
 
     window, _, pair = wired
     editor = PairEditor(pair, is_new=False, parent=window)
@@ -224,14 +224,14 @@ def test_the_editor_refuses_two_identical_folders(wired, tmp_path: Path):
 
 
 def test_the_tray_menu_builds(wired):
-    from mtsync.ui.tray import Tray
+    from dengele.ui.tray import Tray
 
     window, controller, _ = wired
     tray = Tray(controller, window)
     try:
         menu = tray.contextMenu()
         captions = [action.text() for action in menu.actions() if action.text()]
-        assert "Open MT Sync" in captions
+        assert "Open Dengele" in captions
         assert "Sync all now" in captions
         assert "Quit" in captions
     finally:
@@ -239,7 +239,7 @@ def test_the_tray_menu_builds(wired):
 
 
 def test_the_icon_renders_at_every_size(qt_app):
-    from mtsync.ui.icon import app_icon, tray_icon
+    from dengele.ui.icon import app_icon, tray_icon
 
     icon = app_icon()
     assert not icon.isNull()
@@ -260,8 +260,8 @@ def test_closing_the_window_hides_it_when_configured_to(wired):
 
 
 def test_an_empty_config_shows_the_getting_started_screen(qt_app, tmp_path: Path, monkeypatch):
-    monkeypatch.setattr("mtsync.app.config.save", lambda *a, **k: None)
-    from mtsync.ui.main_window import MainWindow
+    monkeypatch.setattr("dengele.app.config.save", lambda *a, **k: None)
+    from dengele.ui.main_window import MainWindow
 
     controller = Controller(Config(), database=tmp_path / "state.db")
     window = MainWindow(controller, Watchers(controller))

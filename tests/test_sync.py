@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from mtsync.engine import (
+from dengele.engine import (
     RECYCLE_DIR,
     ROOT_MARKER,
     AccessError,

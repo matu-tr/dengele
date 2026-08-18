@@ -1,6 +1,6 @@
 # PyInstaller build description.
 #
-# Run from the repository root:  pyinstaller packaging/mtsync.spec
+# Run from the repository root:  pyinstaller packaging/dengele.spec
 #
 # PySide6 ships every Qt module; bundling the lot would produce a ~400 MB app
 # for a program that uses widgets and a socket. The excludes below keep it to
@@ -67,7 +67,7 @@ EXCLUDED_OTHER = [
 ]
 
 analysis = Analysis(
-    [str(ROOT / "mtsync" / "__main__.py")],
+    [str(ROOT / "dengele" / "__main__.py")],
     pathex=[str(ROOT)],
     binaries=[],
     datas=[],
@@ -90,7 +90,7 @@ executable = EXE(
     analysis.scripts,
     [],
     exclude_binaries=True,
-    name="MT Sync",
+    name="Dengele",
     debug=False,
     strip=False,
     upx=False,
@@ -108,18 +108,18 @@ collection = COLLECT(
     analysis.datas,
     strip=False,
     upx=False,
-    name="MT Sync",
+    name="Dengele",
 )
 
 if sys.platform == "darwin":
     app = BUNDLE(
         collection,
-        name="MT Sync.app",
+        name="Dengele.app",
         icon=str(ROOT / "packaging" / "icon.icns"),
-        bundle_identifier="tr.matu.mtsync",
+        bundle_identifier="tr.matu.dengele",
         info_plist={
-            "CFBundleName": "MT Sync",
-            "CFBundleDisplayName": "MT Sync",
+            "CFBundleName": "Dengele",
+            "CFBundleDisplayName": "Dengele",
             "CFBundleShortVersionString": "0.1.0",
             "CFBundleVersion": "0.1.0",
             "NSHighResolutionCapable": True,
@@ -127,22 +127,22 @@ if sys.platform == "darwin":
             # for the protected folders people most want to sync — and a denied
             # read can hang rather than fail, which looks like a frozen app.
             "NSDesktopFolderUsageDescription": (
-                "MT Sync needs access to your Desktop to keep the folders you "
+                "Dengele needs access to your Desktop to keep the folders you "
                 "chose in sync."
             ),
             "NSDocumentsFolderUsageDescription": (
-                "MT Sync needs access to your Documents to keep the folders you "
+                "Dengele needs access to your Documents to keep the folders you "
                 "chose in sync."
             ),
             "NSDownloadsFolderUsageDescription": (
-                "MT Sync needs access to your Downloads to keep the folders you "
+                "Dengele needs access to your Downloads to keep the folders you "
                 "chose in sync."
             ),
             "NSRemovableVolumesUsageDescription": (
-                "MT Sync needs access to external drives to sync onto them."
+                "Dengele needs access to external drives to sync onto them."
             ),
             "NSNetworkVolumesUsageDescription": (
-                "MT Sync needs access to network volumes to sync onto them."
+                "Dengele needs access to network volumes to sync onto them."
             ),
             # The app lives in the menu bar; it should not bounce in the Dock
             # when it starts hidden.

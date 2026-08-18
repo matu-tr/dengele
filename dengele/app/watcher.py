@@ -10,8 +10,8 @@ from pathlib import Path
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
-from mtsync.engine import RECYCLE_DIR
-from mtsync.engine.models import TEMP_SUFFIX
+from dengele.engine import RECYCLE_DIR
+from dengele.engine.models import TEMP_SUFFIX
 
 from .config import WatchMode
 from .controller import Controller
@@ -131,7 +131,7 @@ class Scheduler:
     def start(self) -> None:
         if self._thread is not None:
             return
-        self._thread = threading.Thread(target=self._loop, name="mt-sync-scheduler", daemon=True)
+        self._thread = threading.Thread(target=self._loop, name="dengele-scheduler", daemon=True)
         self._thread.start()
 
     def stop(self) -> None:

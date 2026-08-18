@@ -1,4 +1,4 @@
-# MT Sync
+# Dengele
 
 Keeps two folders identical, in both directions, on macOS and Windows.
 
@@ -25,11 +25,11 @@ in it is iCloud-specific: any two folders will do.
 ## Install
 
 Download the build for your platform from
-[Releases](https://github.com/matu-tr/mt-sync-py/releases). Builds are
+[Releases](https://github.com/matu-tr/dengele/releases). Builds are
 currently **unsigned**, so both systems object the first time:
 
 - **macOS** — after moving the app to Applications, run
-  `xattr -dr com.apple.quarantine "/Applications/MT Sync.app"`.
+  `xattr -dr com.apple.quarantine "/Applications/Dengele.app"`.
 - **Windows** — SmartScreen shows an "unknown publisher" warning; choose
   *More info* → *Run anyway*.
 
@@ -37,10 +37,10 @@ currently **unsigned**, so both systems object the first time:
 
 macOS gates Desktop, Documents, Downloads and external drives behind its
 privacy system. The first sync touching one of those asks for permission. If no
-prompt appears, allow MT Sync under **System Settings › Privacy & Security ›
+prompt appears, allow Dengele under **System Settings › Privacy & Security ›
 Files and Folders** — or grant Full Disk Access, which covers everything.
 
-MT Sync checks it can actually read each folder before scanning, so a denial
+Dengele checks it can actually read each folder before scanning, so a denial
 shows up as a clear message rather than a sync that never finishes.
 
 ## Using it
@@ -56,7 +56,7 @@ shows up as a clear message rather than a sync that never finishes.
 
 Under a pair's ⚙ → **Safety**:
 
-- **Require a marker file** — put a `.mt-sync-root` file in both folders and
+- **Require a marker file** — put a `.dengele-root` file in both folders and
   turn this on, and a sync refuses to run when a drive is not mounted.
   Recommended for external disks.
 - **Hold a sync deleting over X%** — the plan is shown to you instead of being
@@ -91,7 +91,7 @@ Requires Python 3.11 or newer.
 ```bash
 python -m venv .venv
 .venv/bin/pip install -e ".[dev]"
-.venv/bin/python -m mtsync
+.venv/bin/python -m dengele
 ```
 
 The sync engine is a self-contained package with no Qt dependency, so it can be
@@ -115,9 +115,9 @@ skip themselves and the engine tests still run.
 
 | Path | What lives there |
 |---|---|
-| `mtsync/engine` | Scanning, planning, applying, the snapshot database — all the sync logic, no Qt |
-| `mtsync/app` | Configuration, the sync controller and its threads, file watching, autostart |
-| `mtsync/ui` | The window, its screens, the tray, and the theme |
+| `dengele/engine` | Scanning, planning, applying, the snapshot database — all the sync logic, no Qt |
+| `dengele/app` | Configuration, the sync controller and its threads, file watching, autostart |
+| `dengele/ui` | The window, its screens, the tray, and the theme |
 | `packaging` | PyInstaller spec, the Windows installer script, icon generation |
 
 ## License

@@ -15,14 +15,14 @@ from pathlib import Path
 # This guards the failure mode that makes any deleting mirror dangerous: an
 # external disk is unmounted, its mount point is an empty directory, and every
 # file looks deleted.
-ROOT_MARKER = ".mt-sync-root"
+ROOT_MARKER = ".dengele-root"
 
 # Directory, relative to each root, that deleted items are moved into.
-RECYCLE_DIR = ".mt-sync-trash"
+RECYCLE_DIR = ".dengele-trash"
 
 # Suffix of the temporary file a copy is written to before being renamed
 # into place.
-TEMP_SUFFIX = ".mt-sync-tmp"
+TEMP_SUFFIX = ".dengele-tmp"
 
 # How far two modification times may drift and still count as "the same".
 #

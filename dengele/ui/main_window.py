@@ -18,12 +18,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from mtsync.app import autostart
-from mtsync.app import config as config_module
-from mtsync.app.config import Config, Pair, Theme
-from mtsync.app.controller import Controller
-from mtsync.app.watcher import Watchers
-from mtsync.engine import EngineError
+from dengele.app import autostart
+from dengele.app import config as config_module
+from dengele.app.config import Config, Pair, Theme
+from dengele.app.controller import Controller
+from dengele.app.watcher import Watchers
+from dengele.engine import EngineError
 
 from .pair_card import PairCard
 from .pair_editor import PairEditor
@@ -36,7 +36,7 @@ log = logging.getLogger(__name__)
 
 class MainWindow(FramelessWindow):
     def __init__(self, controller: Controller, watchers: Watchers) -> None:
-        super().__init__("MT Sync")
+        super().__init__("Dengele")
         self.resize(900, 640)
         self.setMinimumSize(660, 460)
 
@@ -289,7 +289,7 @@ class _PairsPage(QScrollArea):
         heading = label("No folders yet", "Heading")
         heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
         blurb = label(
-            "Pick two folders and MT Sync keeps them identical in both directions,\n"
+            "Pick two folders and Dengele keeps them identical in both directions,\n"
             "with a recycle bin for anything it removes.",
             "Muted",
         )

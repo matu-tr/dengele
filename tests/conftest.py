@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mtsync.engine import ConflictPolicy, PairConfig, Side, Snapshot, sync_pair
+from dengele.engine import ConflictPolicy, PairConfig, Side, Snapshot, sync_pair
 
 
 class Pair:

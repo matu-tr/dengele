@@ -50,17 +50,17 @@ jobs:
         run: python packaging/make_icons.py
 
       - name: Build with PyInstaller
-        run: pyinstaller --noconfirm packaging/mtsync.spec
+        run: pyinstaller --noconfirm packaging/dengele.spec
 
       - name: Package for macOS
         if: runner.os == 'macOS'
         run: |
           # A plain zip of the .app would lose nothing, but a .dmg is what
           # people expect to double-click.
-          hdiutil create -volname "MT Sync" \
-            -srcfolder "dist/MT Sync.app" \
+          hdiutil create -volname "Dengele" \
+            -srcfolder "dist/Dengele.app" \
             -ov -format UDZO \
-            "dist/MT-Sync-${{ matrix.artifact }}.dmg"
+            "dist/Dengele-${{ matrix.artifact }}.dmg"
 
       - name: Package for Windows
         if: runner.os == 'Windows'
@@ -69,11 +69,11 @@ jobs:
           # Inno Setup ships on the Windows runners; it produces a normal
           # installer rather than a folder people have to place themselves.
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" packaging\installer.iss
-          Compress-Archive -Path "dist\MT Sync\*" -DestinationPath "dist\MT-Sync-windows-x64-portable.zip"
+          Compress-Archive -Path "dist\Dengele\*" -DestinationPath "dist\Dengele-windows-x64-portable.zip"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mt-sync-${{ matrix.artifact }}
+          name: dengele-${{ matrix.artifact }}
           path: |
             dist/*.dmg
             dist/*.exe
@@ -115,12 +115,12 @@ jobs:
             the app to Applications, run:
 
             ```
-            xattr -dr com.apple.quarantine "/Applications/MT Sync.app"
+            xattr -dr com.apple.quarantine "/Applications/Dengele.app"
             ```
 
             The first sync of a folder inside Desktop, Documents, Downloads or
             an external drive will ask for permission. If no prompt appears,
-            allow MT Sync under System Settings › Privacy & Security › Files
+            allow Dengele under System Settings › Privacy & Security › Files
             and Folders.
 
             **Windows** — SmartScreen warns about an unknown publisher; choose

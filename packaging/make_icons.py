@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write the app icon to the formats each installer needs.
 
-The icon itself is drawn in ``mtsync/ui/icon.py``; this only renders it out to
+The icon itself is drawn in ``dengele/ui/icon.py``; this only renders it out to
 ``.icns`` and ``.ico``, which PyInstaller wants as files on disk. Run from the
 repository root:
 
@@ -27,7 +27,7 @@ from PySide6.QtCore import QBuffer  # noqa: E402
 from PySide6.QtGui import QColor  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from mtsync.ui.icon import _render  # noqa: E402
+from dengele.ui.icon import _render  # noqa: E402
 
 #: OSType codes macOS uses for each square PNG size.
 ICNS_TYPES = {

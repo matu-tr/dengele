@@ -12,10 +12,10 @@ from pathlib import Path
 
 import pytest
 
-from mtsync.app.config import Config, Pair, WatchMode
-from mtsync.app.controller import Controller
-from mtsync.app.watcher import is_engine_bookkeeping
-from mtsync.engine import RECYCLE_DIR
+from dengele.app.config import Config, Pair, WatchMode
+from dengele.app.controller import Controller
+from dengele.app.watcher import is_engine_bookkeeping
+from dengele.engine import RECYCLE_DIR
 
 
 @pytest.fixture
@@ -202,7 +202,7 @@ def test_due_pairs_respects_mode_and_interval(setup):
 
 def test_engine_bookkeeping_paths_do_not_trigger_syncs():
     assert is_engine_bookkeeping(f"/root/{RECYCLE_DIR}/2026-01-01/a.txt")
-    assert is_engine_bookkeeping("/root/docs/.report.pdf.mt-sync-tmp")
+    assert is_engine_bookkeeping("/root/docs/.report.pdf.dengele-tmp")
     assert not is_engine_bookkeeping("/root/docs/report.pdf")
 
 
@@ -238,7 +238,7 @@ def test_worker_crashes_do_not_leave_a_pair_stuck_running(setup, monkeypatch):
     def explode(*args, **kwargs):
         raise RuntimeError("boom")
 
-    monkeypatch.setattr("mtsync.app.controller.sync_pair", explode)
+    monkeypatch.setattr("dengele.app.controller.sync_pair", explode)
 
     controller.start(pair.id)
     assert controller.wait(10_000)

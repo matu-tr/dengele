@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from mtsync.engine import (
+from dengele.engine import (
     MTIME_TOLERANCE_MS,
     RECYCLE_DIR,
     ROOT_MARKER,
@@ -23,7 +23,7 @@ from mtsync.engine import (
     recycle,
     scan_root,
 )
-from mtsync.engine.recycle import prune, session_name
+from dengele.engine.recycle import prune, session_name
 
 # -- excludes -----------------------------------------------------------
 
@@ -51,7 +51,7 @@ def test_engine_bookkeeping_is_always_excluded():
     assert excludes.is_excluded(RECYCLE_DIR)
     assert excludes.is_excluded(f"{RECYCLE_DIR}/2026-01-01/a.txt")
     assert excludes.is_excluded(ROOT_MARKER)
-    assert excludes.is_excluded("docs/.report.pdf.mt-sync-tmp")
+    assert excludes.is_excluded("docs/.report.pdf.dengele-tmp")
     assert not excludes.is_excluded("docs/report.pdf")
 
 

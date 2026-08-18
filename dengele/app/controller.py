@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, QRunnable, QThreadPool, Signal
 
-from mtsync.engine import (
+from dengele.engine import (
     ApplyOutcome,
     EngineError,
     Op,
@@ -290,7 +290,7 @@ class _SyncTask(QRunnable):
 
 
 def _verb(op: Op) -> str:
-    from mtsync.engine import OpKind
+    from dengele.engine import OpKind
 
     return {
         OpKind.MKDIR: "creating",

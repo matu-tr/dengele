@@ -5,7 +5,7 @@ from __future__ import annotations
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon
 
-from mtsync.app.controller import Controller
+from dengele.app.controller import Controller
 
 from .icon import app_icon, tray_icon
 
@@ -18,7 +18,7 @@ class Tray(QSystemTrayIcon):
         self._controller = controller
         self._window = window
 
-        self.setToolTip("MT Sync")
+        self.setToolTip("Dengele")
         self.setContextMenu(self._menu())
         self.activated.connect(self._on_activated)
         controller.pair_changed.connect(self._refresh_tooltip)
@@ -26,7 +26,7 @@ class Tray(QSystemTrayIcon):
     def _menu(self) -> QMenu:
         menu = QMenu()
 
-        show = QAction("Open MT Sync", menu)
+        show = QAction("Open Dengele", menu)
         show.triggered.connect(self.show_window)
         menu.addAction(show)
         menu.addSeparator()
@@ -74,7 +74,7 @@ class Tray(QSystemTrayIcon):
 
     def _refresh_tooltip(self, _pair_id: str = "") -> None:
         busy = self._controller.any_running()
-        self.setToolTip("MT Sync — syncing…" if busy else "MT Sync")
+        self.setToolTip("Dengele — syncing…" if busy else "Dengele")
 
 
 def window_icon() -> QIcon:

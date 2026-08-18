@@ -5,8 +5,8 @@ from __future__ import annotations
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QHBoxLayout, QProgressBar, QVBoxLayout, QWidget
 
-from mtsync.app.config import Pair
-from mtsync.app.controller import PairStatus
+from dengele.app.config import Pair
+from dengele.app.controller import PairStatus
 
 from .widgets import banner, button, card, format_when, label
 

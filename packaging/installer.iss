@@ -3,24 +3,24 @@
 ; Built by the release workflow with:
 ;   ISCC.exe packaging\installer.iss
 ;
-; Expects PyInstaller to have produced dist\MT Sync\ first.
+; Expects PyInstaller to have produced dist\Dengele\ first.
 
-#define AppName "MT Sync"
+#define AppName "Dengele"
 #define AppVersion "0.1.0"
 #define AppPublisher "matu-tr"
-#define AppExe "MT Sync.exe"
+#define AppExe "Dengele.exe"
 
 [Setup]
 AppId={{8D5A3C21-7E4B-4F19-9A62-1C0E5B7D3A84}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
-AppSupportURL=https://github.com/matu-tr/mt-sync-py
+AppSupportURL=https://github.com/matu-tr/dengele
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir=..\dist
-OutputBaseFilename=MT-Sync-{#AppVersion}-windows-x64-setup
+OutputBaseFilename=Dengele-{#AppVersion}-windows-x64-setup
 SetupIconFile=icon.ico
 Compression=lzma2
 SolidCompression=yes
@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 Name: "startup"; Description: "Start {#AppName} when I sign in"; GroupDescription: "Startup:"; Flags: unchecked
 
 [Files]
-Source: "..\dist\MT Sync\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\Dengele\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"

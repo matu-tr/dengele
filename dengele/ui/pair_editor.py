@@ -19,9 +19,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from mtsync.app import paths
-from mtsync.app.config import Pair, WatchMode
-from mtsync.engine import ConflictPolicy, ExcludeError, ExcludeSet, RootError, validate_roots
+from dengele.app import paths
+from dengele.app.config import Pair, WatchMode
+from dengele.engine import ConflictPolicy, ExcludeError, ExcludeSet, RootError, validate_roots
 
 from .widgets import Dialog, banner, button, label
 
@@ -90,7 +90,7 @@ class PairEditor(Dialog):
         self._excludes.setPlaceholderText("node_modules/\n*.tmp")
         self._excludes.setFixedHeight(110)
 
-        self._require_marker = QCheckBox("Require a .mt-sync-root file in both folders")
+        self._require_marker = QCheckBox("Require a .dengele-root file in both folders")
         self._require_marker.setChecked(self._pair.engine.require_marker)
         self._skip_cloud = QCheckBox("Skip files that are not downloaded")
         self._skip_cloud.setChecked(self._pair.engine.skip_cloud_placeholders)
@@ -242,7 +242,7 @@ class PairEditor(Dialog):
         if paths.is_privacy_protected(path):
             self._show_error(
                 "macOS protects this location. The first sync will ask for permission — "
-                "if no prompt appears, allow MT Sync under System Settings › Privacy & "
+                "if no prompt appears, allow Dengele under System Settings › Privacy & "
                 "Security › Files and Folders.",
                 tone="warn",
             )

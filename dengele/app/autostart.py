@@ -12,7 +12,49 @@ from .paths import APP_NAME
 
 log = logging.getLogger(__name__)
 
-_LAUNCH_AGENT_ID = "tr.matu.mtsync"
+_LAUNCH_AGENT_ID = "tr.matu.dengele"
+
+#: How the login item was identified before the app was renamed. macOS keys the
+#: agent by its label and Windows by the value name, so a registration made
+#: under the old name is invisible to the code below: it would keep launching
+#: the app at login while the settings screen showed the switch as off, and
+#: turning the switch on and off again would never remove it.
+_LEGACY_LAUNCH_AGENT_ID = "tr.matu.mtsync"
+_LEGACY_APP_NAME = "MT Sync"
+
+
+def migrate_legacy() -> None:
+    """Re-register a pre-rename login item under the current name.
+
+    Called once at startup. Doing nothing is always safe — the cost of a
+    failure here is a stale login item, not a broken app — so every platform
+    error is logged and swallowed.
+    """
+    try:
+        if sys.platform == "darwin":
+            legacy = Path.home() / "Library" / "LaunchAgents" / f"{_LEGACY_LAUNCH_AGENT_ID}.plist"
+            if not legacy.exists():
+                return
+            legacy.unlink()
+            _set_launch_agent(True)
+        elif sys.platform == "win32":
+            import winreg
+
+            with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, _RUN_KEY, 0, winreg.KEY_SET_VALUE | winreg.KEY_READ
+            ) as key:
+                try:
+                    winreg.QueryValueEx(key, _LEGACY_APP_NAME)
+                except FileNotFoundError:
+                    return
+                winreg.DeleteValue(key, _LEGACY_APP_NAME)
+            _set_run_key(True)
+        else:
+            return
+    except OSError as err:
+        log.warning("could not migrate the previous autostart registration: %s", err)
+    else:
+        log.info("moved the login item from %r to %r", _LEGACY_APP_NAME, APP_NAME)
 
 
 def is_enabled() -> bool:
@@ -45,7 +87,7 @@ def _executable() -> list[str]:
     """The command that starts this app, frozen or from source."""
     if getattr(sys, "frozen", False):
         return [sys.executable]
-    return [sys.executable, "-m", "mtsync"]
+    return [sys.executable, "-m", "dengele"]
 
 
 # -- macOS --------------------------------------------------------------
